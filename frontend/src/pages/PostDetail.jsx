@@ -4,7 +4,7 @@ import { getPost, deletePost, getComments } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import CommentForm from '../components/CommentForm'
 
-const TYPE_LABEL = { instructor: '講師', manager: '上長', self: '自分メモ' }
+const TYPE_LABEL = { instructor: '講師', manager: '上長', self: '自分メモ', anonymous: '匿名' }
 
 export default function PostDetail() {
   const { id } = useParams()
@@ -77,9 +77,7 @@ export default function PostDetail() {
             ))}
           </ul>
         )}
-        {isAdmin && (
-          <CommentForm postId={id} onAdded={c => setComments(prev => [...prev, c])} />
-        )}
+        <CommentForm postId={id} onAdded={c => setComments(prev => [...prev, c])} />
       </section>
     </div>
   )

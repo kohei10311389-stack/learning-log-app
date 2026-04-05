@@ -185,15 +185,20 @@ app.get('/api/posts/:postId/comments', async (c) => {
 })
 
 app.post('/api/posts/:postId/comments', async (c) => {
-  const authErr = await requireAuth(c)
-  if (authErr) return authErr
   try {
+    const auth = c.req.header('Authorization') || ''
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : ''
+    const isAdmin = token && (await verifyJWT(token, c.env.JWT_SECRET))
+
     const { content, type } = await c.req.json()
     if (!content?.trim()) return c.json({ error: 'コメントは必須です' }, 400)
     if (content.trim().length > 5000) return c.json({ error: 'コメントは5000文字以内です' }, 400)
-    const validTypes = ['instructor', 'manager', 'self']
-    if (!type || !validTypes.includes(type)) {
-      return c.json({ error: 'typeはinstructor/manager/selfのいずれかです' }, 400)
+
+    const adminTypes = ['instructor', 'manager', 'self']
+    const validTypes = [...adminTypes, 'anonymous']
+    const resolvedType = isAdmin ? (adminTypes.includes(type) ? type : 'self') : 'anonymous'
+    if (!validTypes.includes(resolvedType)) {
+      return c.json({ error: 'typeが不正です' }, 400)
     }
 
     const post = await c.env.DB.prepare(
@@ -203,7 +208,7 @@ app.post('/api/posts/:postId/comments', async (c) => {
 
     const result = await c.env.DB.prepare(
       'INSERT INTO comments (post_id, content, type) VALUES (?, ?, ?)'
-    ).bind(c.req.param('postId'), content.trim(), type).run()
+    ).bind(c.req.param('postId'), content.trim(), resolvedType).run()
 
     const comment = await c.env.DB.prepare(
       'SELECT * FROM comments WHERE id = ?'
