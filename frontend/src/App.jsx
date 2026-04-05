@@ -5,12 +5,14 @@ import PostForm from './pages/PostForm'
 import CategoriesPage from './pages/CategoriesPage'
 import SearchPage from './pages/SearchPage'
 import BottomNav from './components/BottomNav'
+import Sidebar from './components/Sidebar'
 import './index.css'
 
 function App() {
   return (
     <BrowserRouter>
       <div className="app">
+        <Sidebar />
         <main className="main">
           <Routes>
             <Route path="/"               element={<PostList />} />
