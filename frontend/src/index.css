@@ -345,4 +345,35 @@ textarea {
   .detail { padding: 1.25rem; }
   .post-form { padding: 1.25rem; }
   .actions { flex-wrap: wrap; }
+
+  /* タッチ操作しやすいボタンサイズ */
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger {
+    min-height: 44px;
+    padding: 0.75rem 1.2rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-back { min-height: 44px; }
+
+  /* フォームの入力欄を大きく */
+  input[type="text"],
+  textarea,
+  select {
+    font-size: 16px; /* iOS でズームしないように */
+    padding: 0.75rem;
+  }
+
+  /* ヘッダーのセーフエリア対応 */
+  .header {
+    padding-left: max(1.5rem, env(safe-area-inset-left));
+    padding-right: max(1.5rem, env(safe-area-inset-right));
+  }
+
+  /* ボトムセーフエリア（ホームバー）対応 */
+  .app {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
