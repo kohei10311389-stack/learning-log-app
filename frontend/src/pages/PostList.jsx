@@ -5,6 +5,8 @@ import { getPosts } from '../api/client'
 import PostCard from '../components/PostCard'
 import StatsCards from '../components/StatsCards'
 import { SkeletonGrid } from '../components/SkeletonCard'
+import EmptyState from '../components/EmptyState'
+import { listVariants } from '../utils/animations'
 
 export default function PostList() {
   const [posts, setPosts] = useState([])
@@ -59,24 +61,26 @@ export default function PostList() {
       <AnimatePresence mode="wait">
         {loading ? (
           <SkeletonGrid key="skeleton" count={6} />
+        ) : posts.length === 0 ? (
+          <EmptyState key="empty" />
         ) : filtered.length === 0 ? (
           <motion.p
-            key="empty"
+            key="no-match"
             className="empty"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            まだ投稿がありません。最初の学習ログを記録しましょう！
+            条件に一致する投稿がありません。
           </motion.p>
         ) : (
           <motion.div
             key="grid"
             className="post-grid"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
             {filtered.map(post => (
               <PostCard

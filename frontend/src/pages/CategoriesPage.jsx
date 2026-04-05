@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getPosts } from '../api/client'
+import { listVariants, itemVariants } from '../utils/animations'
 
 const PALETTES = [
   { bg: '#dcfce7', text: '#166534' },
@@ -39,31 +40,45 @@ export default function CategoriesPage() {
         <h1 className="page-title">カテゴリ</h1>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {categories.length === 0 ? (
-          <p className="empty">まだカテゴリがありません。投稿時にカテゴリを入力してください。</p>
+          <motion.p
+            key="empty"
+            className="empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            まだカテゴリがありません。投稿時にカテゴリを入力してください。
+          </motion.p>
         ) : (
-          <div className="category-grid">
-            {categories.map((cat, i) => {
+          <motion.div
+            key="grid"
+            className="category-grid"
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            {categories.map(cat => {
               const p = getPalette(cat)
               return (
                 <motion.button
                   key={cat}
                   className="category-card"
-                  style={{ background: p.bg, border: `1px solid ${p.text}22` }}
+                  style={{ background: p.bg }}
                   onClick={() => navigate(`/?category=${encodeURIComponent(cat)}`)}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: 'spring', stiffness: 100, damping: 20, delay: i * 0.05 }}
+                  variants={itemVariants}
                   whileHover={{ y: -3 }}
                   whileTap={{ scale: 0.96 }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 120 }}
                 >
                   <div className="category-icon">📂</div>
                   <span className="category-label" style={{ color: p.text }}>{cat}</span>
                 </motion.button>
               )
             })}
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

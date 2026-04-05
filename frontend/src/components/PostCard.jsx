@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { itemVariants } from '../utils/animations'
 
 const PALETTES = [
   { bg: '#dcfce7', text: '#166534' },
@@ -29,12 +30,7 @@ function formatDate(dateStr) {
   if (!dateStr) return '日時不明'
   const d = new Date(dateStr)
   if (isNaN(d.getTime())) return '日時不明'
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  const h = String(d.getHours()).padStart(2, '0')
-  const min = String(d.getMinutes()).padStart(2, '0')
-  return `${y}/${m}/${day} ${h}:${min}`
+  return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
 export default function PostCard({ post, onClick }) {
@@ -52,9 +48,10 @@ export default function PostCard({ post, onClick }) {
       role="button"
       tabIndex={0}
       onKeyDown={e => e.currentTarget === e.target && e.key === 'Enter' && onClick()}
-      whileHover={{ y: -4 }}
+      variants={itemVariants}
+      whileHover={{ y: -4, boxShadow: '0 10px 24px -4px rgb(0 0 0 / 0.09), 0 4px 8px -4px rgb(0 0 0 / 0.06)' }}
       whileTap={{ scale: 0.96 }}
-      transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 120 }}
     >
       <div className="post-card-top">
         <span
@@ -83,7 +80,7 @@ export default function PostCard({ post, onClick }) {
           style={{ background: palette.text }}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ type: 'spring', stiffness: 60, damping: 18, delay: 0.1 }}
+          transition={{ type: 'spring', stiffness: 60, damping: 20, delay: 0.15 }}
         />
       </div>
     </motion.div>
