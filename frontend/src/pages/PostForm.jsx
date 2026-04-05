@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPost, createPost, updatePost, getPosts } from '../api/client'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 
 export default function PostForm() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { isAdmin } = useAuth()
+  const { showToast } = useToast()
   const isEdit = Boolean(id)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -43,9 +45,11 @@ export default function PostForm() {
     try {
       if (isEdit) {
         await updatePost(id, { title, content, category })
+        showToast('更新しました！✨')
         navigate(`/posts/${id}`)
       } else {
         const res = await createPost({ title, content, category })
+        showToast('保存しました！✨')
         navigate(`/posts/${res.data.id}`)
       }
     } catch (err) {
@@ -87,7 +91,7 @@ export default function PostForm() {
           type="text"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          placeholder="例：Reactのuse效果を学んだ"
+          placeholder="例：Reactのuse効果を学んだ"
           required
         />
         <label htmlFor="content">本文</label>

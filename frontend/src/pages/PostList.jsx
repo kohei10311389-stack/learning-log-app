@@ -37,7 +37,7 @@ export default function PostList() {
         <h1 className="page-title">学習ログ</h1>
       </div>
 
-      {!loading && <StatsCards posts={posts} />}
+      {!loading && !error && <StatsCards posts={posts} />}
 
       <div className="search-bar">
         <span className="search-icon">🔍</span>
@@ -61,7 +61,7 @@ export default function PostList() {
       <AnimatePresence mode="wait">
         {loading ? (
           <SkeletonGrid key="skeleton" count={6} />
-        ) : posts.length === 0 ? (
+        ) : !error && posts.length === 0 ? (
           <EmptyState key="empty" />
         ) : filtered.length === 0 ? (
           <motion.p
