@@ -3,14 +3,14 @@ import { motion } from 'framer-motion'
 import { itemVariants } from '../utils/animations'
 
 const PALETTES = [
-  { bg: '#dcfce7', text: '#166534' },
-  { bg: '#dbeafe', text: '#1e40af' },
-  { bg: '#fce7f3', text: '#9d174d' },
-  { bg: '#f3e8ff', text: '#6b21a8' },
-  { bg: '#ffedd5', text: '#9a3412' },
-  { bg: '#fef9c3', text: '#854d0e' },
-  { bg: '#e0f2fe', text: '#0c4a6e' },
-  { bg: '#fef2f2', text: '#991b1b' },
+  { bg: '#ecfdf5', text: '#047857' }, // emerald
+  { bg: '#eff6ff', text: '#1d4ed8' }, // blue
+  { bg: '#fdf2f8', text: '#9d174d' }, // pink
+  { bg: '#f5f3ff', text: '#6d28d9' }, // violet
+  { bg: '#fff7ed', text: '#c2410c' }, // orange
+  { bg: '#fefce8', text: '#a16207' }, // yellow
+  { bg: '#f0f9ff', text: '#0369a1' }, // sky
+  { bg: '#fff1f2', text: '#be123c' }, // rose
 ]
 
 function getCategoryPalette(category) {
@@ -49,7 +49,7 @@ export default function PostCard({ post, onClick }) {
       tabIndex={0}
       onKeyDown={e => e.currentTarget === e.target && e.key === 'Enter' && onClick()}
       variants={itemVariants}
-      whileHover={{ y: -4, boxShadow: '0 10px 24px -4px rgb(0 0 0 / 0.09), 0 4px 8px -4px rgb(0 0 0 / 0.06)' }}
+      whileHover={{ y: -4, boxShadow: '0 16px 40px rgb(0 0 0 / 0.08)', transition: { duration: 0.2, ease: 'easeOut' } }}
       whileTap={{ scale: 0.96 }}
       transition={{ type: 'spring', damping: 25, stiffness: 120 }}
     >
