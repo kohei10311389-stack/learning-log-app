@@ -43,9 +43,10 @@ app.post('/api/posts', async (c) => {
     if (!title?.trim()) return c.json({ error: 'タイトルは必須です' }, 400)
     if (!content?.trim()) return c.json({ error: '本文は必須です' }, 400)
 
+    const now = new Date().toISOString()
     const result = await c.env.DB.prepare(
-      'INSERT INTO posts (title, content) VALUES (?, ?)'
-    ).bind(title.trim(), content.trim()).run()
+      'INSERT INTO posts (title, content, created_at) VALUES (?, ?, ?)'
+    ).bind(title.trim(), content.trim(), now).run()
 
     const post = await c.env.DB.prepare(
       'SELECT * FROM posts WHERE id = ?'
