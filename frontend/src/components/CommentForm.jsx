@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { createComment } from '../api/client'
+import { useAuth } from '../context/AuthContext'
 
 export default function CommentForm({ postId, onAdded }) {
   const [content, setContent] = useState('')
   const [type, setType] = useState('self')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const { isAdmin } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -24,24 +26,26 @@ export default function CommentForm({ postId, onAdded }) {
 
   return (
     <form onSubmit={handleSubmit} className="comment-form">
-      <h3>コメントを追加</h3>
+      <h3>{isAdmin ? 'コメントを追加' : '匿名でフィードバックを送る'}</h3>
       {error && <p className="error">{error}</p>}
-      <div className="comment-form-row">
-        <select value={type} onChange={e => setType(e.target.value)}>
-          <option value="self">自分メモ</option>
-          <option value="instructor">講師</option>
-          <option value="manager">上長</option>
-        </select>
-      </div>
+      {isAdmin && (
+        <div className="comment-form-row">
+          <select value={type} onChange={e => setType(e.target.value)}>
+            <option value="self">自分メモ</option>
+            <option value="instructor">講師</option>
+            <option value="manager">上長</option>
+          </select>
+        </div>
+      )}
       <textarea
         value={content}
         onChange={e => setContent(e.target.value)}
-        placeholder="コメントや気づきを入力..."
+        placeholder={isAdmin ? 'コメントや気づきを入力...' : 'フィードバックや感想を入力...'}
         rows={4}
         required
       />
       <button type="submit" className="btn-primary" disabled={submitting}>
-        {submitting ? '送信中...' : 'コメントする'}
+        {submitting ? '送信中...' : isAdmin ? 'コメントする' : '匿名で送信'}
       </button>
     </form>
   )

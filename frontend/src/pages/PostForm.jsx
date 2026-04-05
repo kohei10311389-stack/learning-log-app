@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPost, createPost, updatePost, getPosts } from '../api/client'
+import { useAuth } from '../context/AuthContext'
 
 export default function PostForm() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { isAdmin } = useAuth()
   const isEdit = Boolean(id)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -12,6 +14,10 @@ export default function PostForm() {
   const [categories, setCategories] = useState([])
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (!isAdmin) navigate('/')
+  }, [isAdmin, navigate])
 
   useEffect(() => {
     getPosts().then(res => {
