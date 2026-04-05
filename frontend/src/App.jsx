@@ -9,6 +9,7 @@ import SearchPage from './pages/SearchPage'
 import LoginPage from './pages/LoginPage'
 import BottomNav from './components/BottomNav'
 import Sidebar from './components/Sidebar'
+import FAB from './components/FAB'
 import './index.css'
 
 const pageVariants = {
@@ -60,6 +61,7 @@ function App() {
             <AnimatedRoutes />
           </main>
           <BottomNav />
+          <FAB />
         </div>
       </BrowserRouter>
     </AuthProvider>

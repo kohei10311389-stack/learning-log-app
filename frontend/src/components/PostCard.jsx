@@ -1,4 +1,29 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
+
+const PALETTES = [
+  { bg: '#dcfce7', text: '#166534' },
+  { bg: '#dbeafe', text: '#1e40af' },
+  { bg: '#fce7f3', text: '#9d174d' },
+  { bg: '#f3e8ff', text: '#6b21a8' },
+  { bg: '#ffedd5', text: '#9a3412' },
+  { bg: '#fef9c3', text: '#854d0e' },
+  { bg: '#e0f2fe', text: '#0c4a6e' },
+  { bg: '#fef2f2', text: '#991b1b' },
+]
+
+function getCategoryPalette(category) {
+  if (!category) return PALETTES[0]
+  let hash = 0
+  for (let i = 0; i < category.length; i++) {
+    hash = category.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return PALETTES[Math.abs(hash) % PALETTES.length]
+}
+
+function getProgress(content) {
+  return Math.min(100, Math.round((content.length / 500) * 100))
+}
 
 function formatDate(dateStr) {
   if (!dateStr) return '日時不明'
@@ -17,17 +42,27 @@ export default function PostCard({ post, onClick }) {
   const preview = post.content.length > 60
     ? post.content.slice(0, 60) + '...'
     : post.content
+  const palette = getCategoryPalette(post.category)
+  const progress = getProgress(post.content)
 
   return (
-    <div
+    <motion.div
       className="post-card"
       onClick={onClick}
       role="button"
       tabIndex={0}
       onKeyDown={e => e.currentTarget === e.target && e.key === 'Enter' && onClick()}
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 100, damping: 20 }}
     >
       <div className="post-card-top">
-        <span className="post-badge">{post.category || 'その他'}</span>
+        <span
+          className="post-badge"
+          style={{ background: palette.bg, color: palette.text }}
+        >
+          {post.category || 'その他'}
+        </span>
         <button
           className={`bookmark-btn ${bookmarked ? 'bookmarked' : ''}`}
           onClick={e => { e.stopPropagation(); setBookmarked(v => !v) }}
@@ -42,6 +77,15 @@ export default function PostCard({ post, onClick }) {
       <div className="post-card-footer">
         <span className="post-card-date">{formatDate(post.created_at)}</span>
       </div>
-    </div>
+      <div className="post-progress-bar">
+        <motion.div
+          className="post-progress-fill"
+          style={{ background: palette.text }}
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ type: 'spring', stiffness: 60, damping: 18, delay: 0.1 }}
+        />
+      </div>
+    </motion.div>
   )
 }
