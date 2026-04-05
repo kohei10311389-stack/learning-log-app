@@ -61,8 +61,18 @@ export default function PostList() {
       <AnimatePresence mode="wait">
         {loading ? (
           <SkeletonGrid key="skeleton" count={6} />
-        ) : filtered.length === 0 ? (
+        ) : posts.length === 0 ? (
           <EmptyState key="empty" />
+        ) : filtered.length === 0 ? (
+          <motion.p
+            key="no-match"
+            className="empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            条件に一致する投稿がありません。
+          </motion.p>
         ) : (
           <motion.div
             key="grid"
