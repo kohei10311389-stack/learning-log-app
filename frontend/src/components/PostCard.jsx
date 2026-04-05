@@ -19,10 +19,15 @@ export default function PostCard({ post, onClick }) {
     : post.content
 
   return (
-    <div className="post-card" onClick={onClick} role="button" tabIndex={0}
-      onKeyDown={e => e.key === 'Enter' && onClick()}>
+    <div
+      className="post-card"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => e.currentTarget === e.target && e.key === 'Enter' && onClick()}
+    >
       <div className="post-card-top">
-        <span className="post-badge">NEW</span>
+        <span className="post-badge">{post.category || 'その他'}</span>
         <button
           className={`bookmark-btn ${bookmarked ? 'bookmarked' : ''}`}
           onClick={e => { e.stopPropagation(); setBookmarked(v => !v) }}
@@ -36,7 +41,6 @@ export default function PostCard({ post, onClick }) {
       <p className="post-card-preview">{preview}</p>
       <div className="post-card-footer">
         <span className="post-card-date">{formatDate(post.created_at)}</span>
-        <button className="post-card-btn" onClick={onClick} aria-label="詳細を見る">›</button>
       </div>
     </div>
   )

@@ -39,14 +39,14 @@ app.get('/api/posts/:id', async (c) => {
 // POST /api/posts
 app.post('/api/posts', async (c) => {
   try {
-    const { title, content } = await c.req.json()
+    const { title, content, category } = await c.req.json()
     if (!title?.trim()) return c.json({ error: 'タイトルは必須です' }, 400)
     if (!content?.trim()) return c.json({ error: '本文は必須です' }, 400)
 
     const now = new Date().toISOString()
     const result = await c.env.DB.prepare(
-      'INSERT INTO posts (title, content, created_at) VALUES (?, ?, ?)'
-    ).bind(title.trim(), content.trim(), now).run()
+      'INSERT INTO posts (title, content, category, created_at) VALUES (?, ?, ?, ?)'
+    ).bind(title.trim(), content.trim(), category?.trim() || null, now).run()
 
     const post = await c.env.DB.prepare(
       'SELECT * FROM posts WHERE id = ?'
@@ -60,7 +60,7 @@ app.post('/api/posts', async (c) => {
 // PUT /api/posts/:id
 app.put('/api/posts/:id', async (c) => {
   try {
-    const { title, content } = await c.req.json()
+    const { title, content, category } = await c.req.json()
     if (!title?.trim()) return c.json({ error: 'タイトルは必須です' }, 400)
     if (!content?.trim()) return c.json({ error: '本文は必須です' }, 400)
 
@@ -70,8 +70,8 @@ app.put('/api/posts/:id', async (c) => {
     if (!post) return c.json({ error: '投稿が見つかりません' }, 404)
 
     await c.env.DB.prepare(
-      'UPDATE posts SET title = ?, content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?'
-    ).bind(title.trim(), content.trim(), c.req.param('id')).run()
+      'UPDATE posts SET title = ?, content = ?, category = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?'
+    ).bind(title.trim(), content.trim(), category?.trim() || null, c.req.param('id')).run()
 
     const updated = await c.env.DB.prepare(
       'SELECT * FROM posts WHERE id = ?'

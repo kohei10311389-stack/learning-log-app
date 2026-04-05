@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getPosts } from '../api/client'
 import PostCard from '../components/PostCard'
 
@@ -8,6 +8,8 @@ export default function PostList() {
   const [query, setQuery] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeCategory = searchParams.get('category') || ''
 
   useEffect(() => {
     getPosts()
@@ -15,9 +17,11 @@ export default function PostList() {
       .catch(() => setError('投稿の取得に失敗しました'))
   }, [])
 
-  const filtered = posts.filter(p =>
-    p.title.includes(query) || p.content.includes(query)
-  )
+  const filtered = posts.filter(p => {
+    const matchQuery = p.title.includes(query) || p.content.includes(query)
+    const matchCategory = activeCategory ? p.category === activeCategory : true
+    return matchQuery && matchCategory
+  })
 
   return (
     <div className="page">
@@ -34,6 +38,13 @@ export default function PostList() {
           onChange={e => setQuery(e.target.value)}
         />
       </div>
+
+      {activeCategory && (
+        <div className="filter-bar">
+          <span className="filter-badge">{activeCategory}</span>
+          <button className="filter-clear" onClick={() => setSearchParams({})}>✕</button>
+        </div>
+      )}
 
       {error && <p className="error">{error}</p>}
 

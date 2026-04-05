@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getPost, createPost, updatePost } from '../api/client'
+import { getPost, createPost, updatePost, getPosts } from '../api/client'
 
 export default function PostForm() {
   const { id } = useParams()
@@ -8,15 +8,23 @@ export default function PostForm() {
   const isEdit = Boolean(id)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [category, setCategory] = useState('')
+  const [categories, setCategories] = useState([])
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
+    getPosts().then(res => {
+      const cats = [...new Set(res.data.map(p => p.category).filter(Boolean))]
+      setCategories(cats)
+    }).catch(() => {})
+
     if (isEdit) {
       getPost(id)
         .then(res => {
           setTitle(res.data.title)
           setContent(res.data.content)
+          setCategory(res.data.category || '')
         })
         .catch(() => setError('投稿の取得に失敗しました'))
     }
@@ -28,10 +36,10 @@ export default function PostForm() {
     setSubmitting(true)
     try {
       if (isEdit) {
-        await updatePost(id, { title, content })
+        await updatePost(id, { title, content, category })
         navigate(`/posts/${id}`)
       } else {
-        const res = await createPost({ title, content })
+        const res = await createPost({ title, content, category })
         navigate(`/posts/${res.data.id}`)
       }
     } catch (err) {
@@ -52,6 +60,21 @@ export default function PostForm() {
       <h1>{isEdit ? '投稿を編集' : '新規学習ログ'}</h1>
       {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit} className="post-form">
+        <label htmlFor="category">カテゴリ</label>
+        <input
+          id="category"
+          type="text"
+          value={category}
+          onChange={e => setCategory(e.target.value)}
+          placeholder="例：プログラミング、読書、英語..."
+          list="category-suggestions"
+        />
+        <datalist id="category-suggestions">
+          {categories.map(cat => (
+            <option key={cat} value={cat} />
+          ))}
+        </datalist>
+
         <label htmlFor="title">タイトル</label>
         <input
           id="title"

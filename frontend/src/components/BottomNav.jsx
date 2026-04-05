@@ -5,7 +5,6 @@ const NAV_ITEMS = [
   { path: '/categories', icon: '☰', label: 'カテゴリ' },
   { path: '/posts/new',  icon: '＋', label: '投稿', accent: true },
   { path: '/search',     icon: '○', label: '検索' },
-  { path: '/profile',    icon: '人', label: 'プロフィール' },
 ]
 
 export default function BottomNav() {
