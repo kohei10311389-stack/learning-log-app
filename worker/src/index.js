@@ -17,7 +17,8 @@ function b64url(buf) {
 }
 
 function b64urlDecode(str) {
-  return atob(str.replace(/-/g, '+').replace(/_/g, '/'))
+  const s = str.replace(/-/g, '+').replace(/_/g, '/')
+  return atob(s + '='.repeat((4 - s.length % 4) % 4))
 }
 
 async function createJWT(secret) {
