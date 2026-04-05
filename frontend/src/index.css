@@ -352,11 +352,15 @@ textarea {
   .btn-danger {
     min-height: 44px;
     padding: 0.75rem 1.2rem;
-    width: 100%;
-    text-align: center;
   }
 
   .btn-back { min-height: 44px; }
+
+  /* フォームの送信ボタンのみ全幅 */
+  .post-form .btn-primary {
+    width: 100%;
+    text-align: center;
+  }
 
   /* フォームの入力欄を大きく */
   input[type="text"],
