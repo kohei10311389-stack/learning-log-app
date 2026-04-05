@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPost, deletePost, getComments } from '../api/client'
+import { useAuth } from '../context/AuthContext'
 import CommentForm from '../components/CommentForm'
 
-const TYPE_LABEL = { instructor: '講師', manager: '上長', self: '自分メモ' }
+const TYPE_LABEL = { instructor: '講師', manager: '上長', self: '自分メモ', anonymous: '匿名' }
 
 export default function PostDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { isAdmin } = useAuth()
   const [post, setPost] = useState(null)
   const [comments, setComments] = useState([])
   const [error, setError] = useState('')
@@ -49,14 +51,16 @@ export default function PostDetail() {
 
       <div className="content">{post.content}</div>
 
-      <div className="actions">
-        <button onClick={() => navigate(`/posts/${id}/edit`)} className="btn-secondary">
-          編集
-        </button>
-        <button onClick={handleDelete} className="btn-danger">
-          削除
-        </button>
-      </div>
+      {isAdmin && (
+        <div className="actions">
+          <button onClick={() => navigate(`/posts/${id}/edit`)} className="btn-secondary">
+            編集
+          </button>
+          <button onClick={handleDelete} className="btn-danger">
+            削除
+          </button>
+        </div>
+      )}
 
       <section className="comments-section">
         <h2>フィードバック・メモ</h2>
