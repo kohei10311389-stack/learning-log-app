@@ -5,14 +5,14 @@ import { getPosts } from '../api/client'
 import { listVariants, itemVariants } from '../utils/animations'
 
 const PALETTES = [
-  { bg: '#dcfce7', text: '#166534' },
-  { bg: '#dbeafe', text: '#1e40af' },
-  { bg: '#fce7f3', text: '#9d174d' },
-  { bg: '#f3e8ff', text: '#6b21a8' },
-  { bg: '#ffedd5', text: '#9a3412' },
-  { bg: '#fef9c3', text: '#854d0e' },
-  { bg: '#e0f2fe', text: '#0c4a6e' },
-  { bg: '#fef2f2', text: '#991b1b' },
+  { bg: '#ecfdf5', text: '#047857' },
+  { bg: '#eff6ff', text: '#1d4ed8' },
+  { bg: '#fdf2f8', text: '#9d174d' },
+  { bg: '#f5f3ff', text: '#6d28d9' },
+  { bg: '#fff7ed', text: '#c2410c' },
+  { bg: '#fefce8', text: '#a16207' },
+  { bg: '#f0f9ff', text: '#0369a1' },
+  { bg: '#fff1f2', text: '#be123c' },
 ]
 
 function getPalette(cat) {
