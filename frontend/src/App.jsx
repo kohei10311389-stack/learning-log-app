@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AuthProvider } from './context/AuthContext'
+import { ToastProvider } from './context/ToastContext'
 import PostList from './pages/PostList'
 import PostDetail from './pages/PostDetail'
 import PostForm from './pages/PostForm'
@@ -54,6 +55,7 @@ function AnimatedRoutes() {
 function App() {
   return (
     <AuthProvider>
+      <ToastProvider>
       <BrowserRouter>
         <div className="app">
           <Sidebar />
@@ -64,6 +66,7 @@ function App() {
           <FAB />
         </div>
       </BrowserRouter>
+      </ToastProvider>
     </AuthProvider>
   )
 }
